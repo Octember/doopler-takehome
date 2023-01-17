@@ -1,0 +1,25 @@
+#tabs .tab.hidden {
+  display: none;
+}
+
+#tabs #links {
+  padding: 0 0 10px 15px;
+  border-bottom: 1px solid #CCC; 
+  margin: 30px 0;
+}
+
+#tabs #links li {
+  display: inline;
+  margin-right: 15px;
+  padding: 0 10px 8px 10px;
+  text-transform: uppercase;
+}
+
+#tabs #links li.active {
+  border-bottom: 3px solid #409ff8;
+}
+
+#tabs #links li a:hover {
+  cursor: pointer;
+}
+

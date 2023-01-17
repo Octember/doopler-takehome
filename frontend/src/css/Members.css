@@ -1,0 +1,41 @@
+#members {
+  width: 100%;
+  border: 1px solid #EEE;
+  border-radius: 10px;
+  cell-spacing: 0;
+  border-spacing: 0;
+}
+
+#members td,
+#members th {
+  width: 50%;
+  text-align: left;
+  padding: 15px;
+}
+
+#members th {
+  color: #CCC;
+  text-transform: uppercase;
+  padding: 25px 0 10px 15px;
+  border-bottom: 1px solid #EEE;
+}
+
+#members td {
+  background: #F8F8F8;
+  border: 0;
+  margin: 0;
+  border-bottom: 1px solid #EEE;
+}
+
+#members td p {
+  margin: 4px;
+}
+
+#members td p.email {
+  font-size: 13px;
+  color: #888;
+}
+
+#members td p.role {
+  margin-top: -15px;
+}
