@@ -1,7 +1,7 @@
 import { Context } from '../context';
 
 export enum ExperimentName {
-    AddMembers = "addMembers",
+    ShowMembersDefault = "showMembersDefault",
     Test = "ddd"
 }
 
@@ -14,7 +14,8 @@ export type Variation<T> = {
 
 export type Experiment<T> = {
     experimentName: ExperimentName;
-    variations: [Variation<T>, ...Variation<T>[]]
+    // variations: [Variation<T>, ...Variation<T>[]]
+    variations: Variation<T>[];
 }
 
 export type ExtractVariations<Exp> = Exp extends Experiment<infer T> ? T : never;

@@ -1,11 +1,11 @@
 import { Context, getContext } from "../context";
 import React from 'react';
-import { Experiment, ExtractVariations, ExperimentName } from './types';
-import { AddMembersExperiment } from './constants';
+import { Experiment, ExtractVariations, ExperimentName, Variation } from './types';
+import { ShowMembersDefaultExperiment, AddSecretsMoveButtonExperiment} from './constants';
 
 const Experiments = {
-    [ExperimentName.AddMembers]: AddMembersExperiment,
-    [ExperimentName.Test]: AddMembersExperiment
+    [ExperimentName.ShowMembersDefault]: ShowMembersDefaultExperiment,
+    [ExperimentName.Test]: AddSecretsMoveButtonExperiment
 }
 
 type ExperimentVariations = {
@@ -17,9 +17,10 @@ export type ExperimentationProvider = {
     useVariation: <T extends ExperimentName>(experimentName: T, variation: ExperimentVariations[T]) => boolean;
 };
 
-function resolveVariation<T>(userContext: Context, experiment: Experiment<T>): T {
+function resolveVariation<T extends ExperimentName>(userContext: Context, experimentName: ExperimentName): ExperimentVariations[T] {
+    const experiment = Experiments[experimentName];
+    const variations: Variation<any>[] = experiment.variations;
 
-    const variations = experiment.variations;
     variations.sort((v1, v2) => v1.position - v2.position);
 
     const result = variations.find(variation => {
@@ -36,26 +37,22 @@ function resolveVariation<T>(userContext: Context, experiment: Experiment<T>): T
 }
 
 export function useExperiments(): ExperimentationProvider {
-
     const userContext = getContext();
 
-    // TODO
     const [cachedVariations, setCachedVariations] = React.useState<ExperimentVariations>({} as ExperimentVariations);
 
-    //  TODO ideally this returns back the union type i.e. 'original' | 'variation'
     function getActiveVariation<T extends ExperimentName>(experimentName: T): ExperimentVariations[T] {
         if (experimentName in cachedVariations) {
             return cachedVariations[experimentName];
         }
 
-        const experiment = Experiments[experimentName];
-
-        const result = resolveVariation(userContext, experiment);
+        const result = resolveVariation(userContext, experimentName);
         setCachedVariations({
             ...cachedVariations,
             [experimentName]: result,
         })
-        return result;
+
+        return result as ExperimentVariations[T];
     }
 
     return {
