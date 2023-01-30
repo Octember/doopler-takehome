@@ -1,56 +1,21 @@
-import { Context, getContext } from "./context";
+import { Context, getContext } from "../context";
 import React from 'react';
-// TODO rename
-export type ExperimentationProvider = {
-    getActiveVariation: <T extends ExperimentName>(experimentName: T) => ExperimentVariations[T];
-    useVariation: <T extends ExperimentName>(experimentName: T, variation: ExperimentVariations[T]) => boolean;
-};
-
-
-type VariationCondition = (context: Context) => boolean;
-type Variation<T> = {
-    condition: VariationCondition;
-    name: T;
-    position: number;
-};
-
-type Experiment<T> = {
-    experimentName: ExperimentName;
-    // variationNames: T,
-    variations: [Variation<T>, ...Variation<T>[]]
-}
-
-export enum ExperimentName {
-    AddMembers = "addMembers",
-    Test = "ddd"
-}
-
-const AddMembersExperiment: Experiment<'original' | 'variation'> = {
-    experimentName: ExperimentName.AddMembers,
-    variations: [
-        {
-            condition: (context) => context.userId % 2 === 0,
-            name: 'original',
-            position: 0
-        },
-        {
-            condition: (context) => context.userId % 2 === 1,
-            name: 'variation',
-            position: 1,
-        }
-    ]
-}
+import { Experiment, ExtractVariations, ExperimentName } from './types';
+import { AddMembersExperiment } from './constants';
 
 const Experiments = {
     [ExperimentName.AddMembers]: AddMembersExperiment,
     [ExperimentName.Test]: AddMembersExperiment
 }
 
-type ExtractVariations<Exp> = Exp extends Experiment<infer T> ? T : never;
-
-type ExperimentVariations = { 
+type ExperimentVariations = {
     [Property in keyof typeof Experiments]: ExtractVariations<typeof Experiments[Property]>
 }
+
+export type ExperimentationProvider = {
+    getActiveVariation: <T extends ExperimentName>(experimentName: T) => ExperimentVariations[T];
+    useVariation: <T extends ExperimentName>(experimentName: T, variation: ExperimentVariations[T]) => boolean;
+};
 
 function resolveVariation<T>(userContext: Context, experiment: Experiment<T>): T {
 
@@ -103,3 +68,5 @@ export function useExperiments(): ExperimentationProvider {
     }
 
 }
+
+export { ExperimentName }
