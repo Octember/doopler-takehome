@@ -1,11 +1,12 @@
 import React from 'react';
 import { Context, getContext } from "../context";
-import { AddSecretsMoveButtonExperiment, ShowMembersDefaultExperiment } from './constants';
+import {AddSecretsMoveButtonExperiment, ShowMembersDefaultExperiment, TestExperiment} from './constants';
 import { ExperimentName, ExtractVariations, Variation } from './types';
 
 const Experiments = {
     [ExperimentName.ShowMembersDefault]: ShowMembersDefaultExperiment,
-    [ExperimentName.MoveAddSecretsButton]: AddSecretsMoveButtonExperiment
+    [ExperimentName.MoveAddSecretsButton]: AddSecretsMoveButtonExperiment,
+    [ExperimentName.Test]: TestExperiment
 }
 
 type ExperimentVariations = {
@@ -32,7 +33,7 @@ function resolveVariation<T extends ExperimentName>(userContext: Context, experi
 }
 
 type ExperimentLoader<T extends ExperimentName> = {
-    getActiveVariation: (experimentName: T) => ExperimentVariations[T];
+    getActiveVariation: () => ExperimentVariations[T];
     variationIsActive: (variation: ExperimentVariations[T]) => boolean;
 }
 
@@ -76,7 +77,6 @@ export function useExperiments(): ExperimentationProvider {
     return {
         experiment: (experimentName) =>  buildLoader(experimentName),
     }
-
 }
 
 export { ExperimentName };

@@ -2,7 +2,8 @@ import { Context } from '../context';
 
 export enum ExperimentName {
     ShowMembersDefault = "showMembersDefault",
-    MoveAddSecretsButton = "MoveAddSecretsButton"
+    MoveAddSecretsButton = "MoveAddSecretsButton",
+    Test = "test"
 }
 
 export type VariationCondition = (context: Context) => boolean;
@@ -19,4 +20,5 @@ export type Experiment<T> = {
 
 export type ExtractVariations<Exp> = Exp extends Experiment<infer T> ? T : never;
 
-
+type Test = ExtractVariations<number>
+type Test2 = ExtractVariations<Experiment<ExperimentName.ShowMembersDefault>>

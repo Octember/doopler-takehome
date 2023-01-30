@@ -37,3 +37,14 @@ export const AddSecretsMoveButtonExperiment: Experiment<'original' | 'variation2
         }
     ]
 }
+
+export const TestExperiment: Experiment<'foo'> = {
+    experimentName: ExperimentName.ShowMembersDefault,
+    variations: [
+        {
+            condition: (context) => true,
+            name: 'foo',
+            position: 0
+        }
+    ]
+}
