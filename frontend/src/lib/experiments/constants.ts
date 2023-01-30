@@ -23,7 +23,7 @@ export const ShowMembersDefaultExperiment: Experiment<'original' | 'variation'> 
 }
 
 export const AddSecretsMoveButtonExperiment: Experiment<'original' | 'variation2'> = {
-    experimentName: ExperimentName.Test,
+    experimentName: ExperimentName.ShowMembersDefault,
     variations: [
         {
             condition: (context) => userIdMod2(context),

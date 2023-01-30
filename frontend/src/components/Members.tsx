@@ -2,10 +2,8 @@ import React from "react";
 import Member from "./Member";
 import AddMember from "./AddMember";
 import "../css/Members.css";
-import { useExperiments, ExperimentName } from "../lib/experiments";
 
 export default function Members() {
-  const experimentation = useExperiments();
 
   return (
     <>

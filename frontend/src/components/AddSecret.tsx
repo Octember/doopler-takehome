@@ -1,7 +1,10 @@
 import React from 'react';
+import analytics from '../lib/analytics';
 
 export default function AddSecret() {
   return (
-    <button>Add Secret</button>
+    <button onClick={() => {
+      analytics.track("Secrets.Add");
+    }}>Add Secret</button>
   );
 }

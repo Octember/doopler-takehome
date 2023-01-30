@@ -5,7 +5,7 @@ import { ShowMembersDefaultExperiment, AddSecretsMoveButtonExperiment} from './c
 
 const Experiments = {
     [ExperimentName.ShowMembersDefault]: ShowMembersDefaultExperiment,
-    [ExperimentName.Test]: AddSecretsMoveButtonExperiment
+    [ExperimentName.MoveAddSecretsButton]: AddSecretsMoveButtonExperiment
 }
 
 type ExperimentVariations = {
