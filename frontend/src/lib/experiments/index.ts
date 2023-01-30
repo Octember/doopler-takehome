@@ -1,7 +1,7 @@
-import { Context, getContext } from "../context";
 import React from 'react';
-import { Experiment, ExtractVariations, ExperimentName, Variation } from './types';
-import { ShowMembersDefaultExperiment, AddSecretsMoveButtonExperiment} from './constants';
+import { Context, getContext } from "../context";
+import { AddSecretsMoveButtonExperiment, ShowMembersDefaultExperiment } from './constants';
+import { ExperimentName, ExtractVariations, Variation } from './types';
 
 const Experiments = {
     [ExperimentName.ShowMembersDefault]: ShowMembersDefaultExperiment,
@@ -12,12 +12,7 @@ type ExperimentVariations = {
     [Property in keyof typeof Experiments]: ExtractVariations<typeof Experiments[Property]>
 }
 
-export type ExperimentationProvider = {
-    getActiveVariation: <T extends ExperimentName>(experimentName: T) => ExperimentVariations[T];
-    useVariation: <T extends ExperimentName>(experimentName: T, variation: ExperimentVariations[T]) => boolean;
-};
-
-function resolveVariation<T extends ExperimentName>(userContext: Context, experimentName: ExperimentName): ExperimentVariations[T] {
+function resolveVariation<T extends ExperimentName>(userContext: Context, experimentName: T): ExperimentVariations[T] {
     const experiment = Experiments[experimentName];
     const variations: Variation<any>[] = experiment.variations;
 
@@ -36,6 +31,16 @@ function resolveVariation<T extends ExperimentName>(userContext: Context, experi
     return result.name;
 }
 
+type ExperimentLoader<T extends ExperimentName> = {
+    getActiveVariation: (experimentName: T) => ExperimentVariations[T];
+    variationIsActive: (variation: ExperimentVariations[T]) => boolean;
+}
+
+export type ExperimentationProvider = {
+    experiment: <T extends ExperimentName>(experimentName: T) => ExperimentLoader<T>
+};
+
+
 export function useExperiments(): ExperimentationProvider {
     const userContext = getContext();
 
@@ -52,18 +57,26 @@ export function useExperiments(): ExperimentationProvider {
             [experimentName]: result,
         })
 
-        return result as ExperimentVariations[T];
+        return result;
+    }
+
+    function buildLoader<T extends ExperimentName>(experimentName: T): ExperimentLoader<T>  {
+        return {
+            getActiveVariation: () => {
+               return getActiveVariation(experimentName);
+            },
+            variationIsActive: (variation) => {
+                const activeVariation = getActiveVariation(experimentName);
+
+                return activeVariation === variation;
+            }
+        }
     }
 
     return {
-        getActiveVariation,
-        useVariation: (experimentName, variation) => {
-            const activeVariation = getActiveVariation(experimentName);
-
-            return activeVariation === variation;
-        },
+        experiment: (experimentName) =>  buildLoader(experimentName),
     }
 
 }
 
-export { ExperimentName }
+export { ExperimentName };

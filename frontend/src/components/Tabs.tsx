@@ -13,10 +13,9 @@ type State = {
 
 export default function Tabs() {
   const experimentation = useExperiments();
-  const showSecretsDefault = experimentation.useVariation(
-    ExperimentName.ShowMembersDefault,
-    "original"
-  );
+  const showSecretsDefault = experimentation
+    .experiment(ExperimentName.ShowMembersDefault)
+    .variationIsActive("original");
 
   const [state, setState] = useState<State>({
     showSecrets: showSecretsDefault,
